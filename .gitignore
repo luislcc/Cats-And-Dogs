@@ -1,9 +1,9 @@
 # Specify filepatterns you want git to ignore.
-test/
 train/
-trainPandas/
 sampleSubmission.csv
-*.npy
 __pycache__/
 CatsDogs/
+CatsDogsFinal/
 CatsDogsPandas/
+CatsDogsPandasFinal/
+.env

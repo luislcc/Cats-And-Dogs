@@ -1,0 +1,7 @@
+tensorflow
+tensorflow-gpu
+opencv-python
+numpy
+requests
+matplotlib
+python-dotenv
