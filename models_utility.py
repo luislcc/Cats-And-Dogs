@@ -1,6 +1,6 @@
 import random
 import numpy as np
-
+import copy
 
 class DataAugmentator(object):
 	def __init__(self, **kwargs):
@@ -22,7 +22,7 @@ class DataAugmentator(object):
 		return img
 
 	def values(self):
-		res = self.__dict__
+		res = copy.deepcopy(self.__dict__)
 		if res["noise"]:
 			res["preprocessing_function"] = DataAugmentor.add_noise
 
