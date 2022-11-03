@@ -43,11 +43,14 @@ def transfer_VGG16(classes=2, apply_noise=False, noise_stddev=0.5):
 	# mark loaded layers as not trainable
 	for layer in model.layers:
 		layer.trainable = False
-	# add new classifier layers
-	if apply_noise:
-		model.add(GaussianNoise(noise_stddev))
+	
 
-	flat1 = Flatten()(model.layers[-1].output)
+	# add new classifier layers
+	gNoise = model.layers[-1].output
+	if apply_noise:
+		gNoise = GaussianNoise(noise_stddev)(gNoise)
+
+	flat1 = Flatten()(gNoise)
 	class1 = Dense(128, activation='relu', kernel_initializer='he_uniform')(flat1)
 	output = Dense(classes, activation='sigmoid')(class1)
 	# define new model
@@ -65,7 +68,12 @@ class BaseModel(object):
 		self.name = name
 		self.model = modelFunction(**model_opts)
 		self.history = None
+		self.model_opts = model_opts
+		self.modelFunction = modelFunction
 		pass
+
+	def reset_model(self):
+		self.model = modelFunction(**(self.model_opts))
 
 	def run_test_harness(self,dataSetFolder,data_augmentation={}):
 		train_datagen = ImageDataGenerator(rescale=1.0/255.0, **data_augmentation)
