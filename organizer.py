@@ -112,7 +112,7 @@ class ImageQuery(object):
 					r = requests.get(v["contentUrl"], timeout=30)
 					# build the path to the output image
 					ext = v["contentUrl"][v["contentUrl"].rfind("."):]
-					p = os.path.join(self.download_folder, f"{keywords.replace(" ",".")}.{str(count).zfill(8)}{ext}")
+					p = os.path.join(self.download_folder, f"{keywords.replace(' ','.')}.{str(count).zfill(8)}{ext}")
 					# write the image to disk
 					f = open(p, "wb")
 					f.write(r.content)

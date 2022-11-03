@@ -24,7 +24,7 @@ class DataAugmentator(object):
 	def values(self):
 		res = copy.deepcopy(self.__dict__)
 		if res["noise"]:
-			res["preprocessing_function"] = DataAugmentor.add_noise
+			res["preprocessing_function"] = DataAugmentator.add_noise
 
 		del res["noise"]
 
