@@ -23,9 +23,7 @@ class DirectoryOrganizer(object):
 		self.sub_dirs = ["train","val"]
 		self.folders = {}
 		
-		self.seed = None
-		if seed is not None:
-			self.seed=seed
+		self.seed=seed
 		
 		self.val_ratio=val_ratio
 		self.workers = workers
@@ -45,7 +43,7 @@ class DirectoryOrganizer(object):
 		self.make_structure()
 		folders = self.train_folders
 		if self.seed is not None:
-			seed(1)
+			seed(self.seed)
 		
 		for folder in folders:
 			foldDir = os.listdir(folder)
@@ -84,7 +82,7 @@ class ImageQuery(object):
 		self.API_URL = API_URL
 
 
-	def query(self,keywords,group_size=50,max_results=250):
+	def query(self,keyword,group_size=50,max_results=250):
 		if self.dotenv_file is not None:
 			load_dotenv(self.dotenv_file)
 		else:

@@ -35,9 +35,9 @@ print("Training Model")
 ##################################
 ### Testes ###
 da = DataAugmentator(noise=False)
-VGG1 = BaseModel("VGG1_DA_Keras", basic_VGG, blocks=1, apply_noise=False, classes=2)
-VGG1.run_test_harness(data_cats_dogs,da.values())
-VGG1.summarize()
+#VGG1 = BaseModel("VGG1_DA_Keras", basic_VGG, blocks=1, apply_noise=False, classes=2)
+#VGG1.run_test_harness(data_cats_dogs,da.values())
+#VGG1.summarize()
 #VGG1.final_test_harness(final_cats_dogs)
 
 #VGG2 = BaseModel("VGG2",basic_VGG(2))
@@ -50,9 +50,9 @@ VGG1.summarize()
 #VGG3.summarize()
 #VGG3.final_test_harness(final_cats_dogs)
 
-#VGG16 = BaseModel("VGG16",transfer_VGG16())
-#VGG16.run_test_harness(data_cats_dogs)
-#VGG16.summarize()
+VGG16 = BaseModel("VGG16",transfer_VGG16)
+VGG16.run_test_harness(data_cats_dogs)
+VGG16.summarize()
 #VGG16.final_test_harness(final_cats_dogs)
 
 #VGG16 = BaseModel("VGG16_DA",transfer_VGG16())
