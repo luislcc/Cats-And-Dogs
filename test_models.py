@@ -1,8 +1,8 @@
-from models import BaseModel,basic_VGG,transfer_VGG16
-from models_utility import DataAugmentator
+from models import BaseModel, basic_VGG, transfer_VGG16, transfer_ResNet, transfer_EfficientNet
 import tensorflow as tf
 from organizer import DirectoryOrganizer,ImageQuery
-
+from models_utility import DataAugmentator
+import pickle
 
 
 #GPU
@@ -34,39 +34,38 @@ print("Training Model")
 
 ##################################
 ### Testes ###
-da = DataAugmentator(noise=False)
-#VGG1 = BaseModel("VGG1_DA_Keras", basic_VGG, blocks=1, apply_noise=False, classes=2)
-#VGG1.run_test_harness(data_cats_dogs,da.values())
-#VGG1.summarize()
-#VGG1.final_test_harness(final_cats_dogs)
 
-#VGG2 = BaseModel("VGG2",basic_VGG(2))
-#VGG2.run_test_harness(data_cats_dogs)
-#VGG2.summarize()
-#VGG2.final_test_harness(final_cats_dogs)
+#DAugmentatorBasic = DataAugmentator(blockProb=0,noiseProb=0,contProb=0.15,brigProb=0.15,vFProb=0.25,hFProb=0.5,rotProb=0.25, trtProb=0.25)
+DAugmentator = DataAugmentator()
+DAugmentatorVal = DataAugmentator(contProb=0,brigProb=0,vFProb=0,hFProb=0,rotProb=0, trtProb=0)
 
-#VGG3 = BaseModel("VGG3",basic_VGG(3))
-#VGG3.run_test_harness(data_cats_dogs)
-#VGG3.summarize()
-#VGG3.final_test_harness(final_cats_dogs)
+#CNN = BaseModel("VGG1", basic_VGG, blocks=1)
+#CNN.run_test_harness(data_cats_dogs,["cat","dog"],DAugmentator)
+#CNN.summarize()
 
-VGG16 = BaseModel("VGG16",transfer_VGG16)
-VGG16.run_test_harness(data_cats_dogs)
-VGG16.summarize()
-#VGG16.final_test_harness(final_cats_dogs)
 
-#VGG16 = BaseModel("VGG16_DA",transfer_VGG16())
-#VGG16.run_test_harness(data_cats_dogs,da.values())
-#VGG16.summarize()
-#VGG16.final_test_harness(final_cats_dogs)
+#CNN = BaseModel("VGG2", basic_VGG, blocks=2)
+#CNN.run_test_harness(data_cats_dogs,["cat","dog"],DAugmentator)
+#CNN.summarize()
+
+
+#CNN = BaseModel("VGG3", basic_VGG, blocks=3)
+#CNN.run_test_harness(data_cats_dogs,["cat","dog"],DAugmentator)
+#CNN.summarize()
+
+
+#CNN = BaseModel("VGG16", transfer_VGG16)
+#CNN.run_test_harness(data_cats_dogs,["cat","dog"],DAugmentator)
+#CNN.summarize()
+
+
+#CNN = BaseModel("ResNet50", transfer_ResNet)
+#CNN.run_test_harness(data_cats_dogs,["cat","dog"],DAugmentator)
+#CNN.summarize()
+
+
+ResNet = BaseModel("ResNet", transfer_ResNet, tf.keras.applications.resnet50.preprocess_input)
+ResNet.run_test_harness(data_cats_dogs,["cat","dog"],DAugmentator,DAugmentatorVal)
+ResNet.summarize()
 
 ###################################
-
-
-
-
-# make sure it runs on a GPU
-# make models for +2 elements dataSet
-
-
-
