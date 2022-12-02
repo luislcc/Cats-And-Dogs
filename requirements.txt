@@ -7,3 +7,4 @@ matplotlib
 python-dotenv
 scipy
 keras
+google-search-results

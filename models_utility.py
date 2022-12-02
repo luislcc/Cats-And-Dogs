@@ -119,10 +119,11 @@ class DataAugmentator(object):
 
 
 class DataFlowClasses(Sequence):
-	def __init__(self, direc, classes, preprocess, batch_size=16, bufferImages=34, bufferReadMax=64, bufferWorkers=16):
+	def __init__(self, direc, classes, preprocess, scale=1 ,batch_size=16, bufferImages=34, bufferReadMax=64, bufferWorkers=16):
 		self.classesDir = {clss:os.path.join(direc,clss) for clss in classes}
 		self.dataPreProcessor = preprocess
 		self.batch_size = batch_size
+		self.scale = scale
 		
 		
 		self.images = [(i,os.path.join(self.classesDir[x],y)) for i,x in enumerate(classes) for y in os.listdir(self.classesDir[x]) if (y.endswith(".jpg") or y.endswith(".png"))]
@@ -164,7 +165,7 @@ class DataFlowClasses(Sequence):
 			oneHot = np.zeros(self.classNumber+1)
 			oneHot[clss] = 1
 
-			imgPP = img
+			imgPP = img/self.scale
 			for pp in self.dataPreProcessor:
 				imgPP = pp(imgPP)
 			

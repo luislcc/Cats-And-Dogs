@@ -39,33 +39,157 @@ print("Training Model")
 DAugmentator = DataAugmentator()
 DAugmentatorVal = DataAugmentator(contProb=0,brigProb=0,vFProb=0,hFProb=0,rotProb=0, trtProb=0)
 
-#CNN = BaseModel("VGG1", basic_VGG, blocks=1)
-#CNN.run_test_harness(data_cats_dogs,["cat","dog"],DAugmentator)
-#CNN.summarize()
+#CNN = BaseModel("VGG1", basic_VGG,scale=255, blocks=1)
+#try:
+#	CNN.run_test_harness(data_cats_dogs,["cat","dog"],DAugmentatorVal,DAugmentatorVal)
+#except Exception as e:
+#	print(e)
+#
+#try:
+#	CNN.summarize()
+#except Exception as e:
+#	print(e)
 
 
-#CNN = BaseModel("VGG2", basic_VGG, blocks=2)
-#CNN.run_test_harness(data_cats_dogs,["cat","dog"],DAugmentator)
-#CNN.summarize()
+#CNN = BaseModel("VGG1DA", basic_VGG,scale=255, blocks=1)
+#try:
+#	CNN.run_test_harness(data_cats_dogs,["cat","dog"],DAugmentator,DAugmentatorVal)
+#except Exception as e:
+#	print(e)
+#
+#try:
+#	CNN.summarize()
+#except Exception as e:
+#	print(e)
 
 
-#CNN = BaseModel("VGG3", basic_VGG, blocks=3)
-#CNN.run_test_harness(data_cats_dogs,["cat","dog"],DAugmentator)
-#CNN.summarize()
+
+#CNN = BaseModel("VGG2", basic_VGG,scale=255, blocks=2)
+#try:
+#	CNN.run_test_harness(data_cats_dogs,["cat","dog"],DAugmentatorVal,DAugmentatorVal)
+#except Exception as e:
+#	print(e)
+#
+#try:
+#	CNN.summarize()
+#except Exception as e:
+#	print(e)
 
 
-#CNN = BaseModel("VGG16", transfer_VGG16)
-#CNN.run_test_harness(data_cats_dogs,["cat","dog"],DAugmentator)
-#CNN.summarize()
+
+#CNN = BaseModel("VGG2DA", basic_VGG, scale=255, blocks=2)
+#try:
+#	CNN.run_test_harness(data_cats_dogs,["cat","dog"],DAugmentator,DAugmentatorVal)
+#except Exception as e:
+#	print(e)
+#
+#try:
+#	CNN.summarize()
+#except Exception as e:
+#	print(e)
 
 
-#CNN = BaseModel("ResNet50", transfer_ResNet)
-#CNN.run_test_harness(data_cats_dogs,["cat","dog"],DAugmentator)
-#CNN.summarize()
+
+#CNN = BaseModel("VGG3", basic_VGG, scale=255, blocks=3)
+#try:
+#	CNN.run_test_harness(data_cats_dogs,["cat","dog"],DAugmentatorVal,DAugmentatorVal)
+#except Exception as e:
+#	print(e)
+#
+#try:
+#	CNN.summarize()
+#except Exception as e:
+#	print(e)
 
 
-ResNet = BaseModel("ResNet", transfer_ResNet, tf.keras.applications.resnet50.preprocess_input)
-ResNet.run_test_harness(data_cats_dogs,["cat","dog"],DAugmentator,DAugmentatorVal)
-ResNet.summarize()
+#CNN = BaseModel("VGG3DA", basic_VGG, scale=255, blocks=3)
+#try:
+#	CNN.run_test_harness(data_cats_dogs,["cat","dog"],DAugmentator,DAugmentatorVal)
+#except waitTimeException as e:
+#	print(e)
+#
+#try:
+#	CNN.summarize()
+#except Exception as e:
+#	print(e)
+
+
+
+CNN = BaseModel("VGG16", transfer_VGG16, tf.keras.applications.vgg16.preprocess_input)
+try:
+	CNN.run_test_harness(data_cats_dogs,["cat","dog"],DAugmentatorVal,DAugmentatorVal)
+except Exception as e:
+	print(e)
+
+try:
+	CNN.summarize()
+except Exception as e:
+	print(e)
+
+
+
+CNN = BaseModel("VGG16DA", transfer_VGG16, tf.keras.applications.vgg16.preprocess_input)
+try:
+	CNN.run_test_harness(data_cats_dogs,["cat","dog"],DAugmentator,DAugmentatorVal)
+except Exception as e:
+	print(e)
+
+try:
+	CNN.summarize()
+except Exception as e:
+	print(e)
+
+
+
+CNN = BaseModel("ResNet50", transfer_ResNet, tf.keras.applications.resnet50.preprocess_input)
+try:
+	CNN.run_test_harness(data_cats_dogs,["cat","dog"],DAugmentatorVal,DAugmentatorVal)
+except Exception as e:
+	print(e)
+
+try:
+	CNN.summarize()
+except Exception as e:
+	print(e)
+
+
+
+CNN = BaseModel("ResNet50DA", transfer_ResNet, tf.keras.applications.resnet50.preprocess_input)
+
+try:
+	CNN.run_test_harness(data_cats_dogs,["cat","dog"],DAugmentator,DAugmentatorVal)
+except Exception as e:
+	print(e)
+
+try:
+	CNN.summarize()
+except Exception as e:
+	print(e)
+
+
+
+CNN = BaseModel("EfficientNetB0", transfer_EfficientNet, tf.keras.applications.efficientnet.preprocess_input)
+try:
+	CNN.run_test_harness(data_cats_dogs,["cat","dog"],DAugmentatorVal,DAugmentatorVal,save=False)
+except Exception as e:
+	print(e)
+
+try:
+	CNN.summarize()
+except Exception as e:
+	print(e)
+
+
+CNN = BaseModel("EfficientNetB0DA", transfer_EfficientNet, tf.keras.applications.efficientnet.preprocess_input)
+try:
+	CNN.run_test_harness(data_cats_dogs,["cat","dog"],DAugmentator,DAugmentatorVal,save=False)
+except Exception as e:
+	print(e)
+
+try:
+	CNN.summarize()
+except Exception as e:
+	print(e)
+
 
 ###################################

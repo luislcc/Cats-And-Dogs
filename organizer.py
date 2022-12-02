@@ -76,56 +76,84 @@ class DirectoryOrganizer(object):
 
 
 class ImageQuery(object):
-	def __init__(self, download_folder, API_URL, dotenv_file=None):
+	def __init__(self, download_folder, dotenv_file=None):
 		self.dotenv_file = dotenv_file
 		self.download_folder = download_folder
-		self.API_URL = API_URL
 
 
-	def query(self,keyword,group_size=50,max_results=250):
+	def query(self,keyword,group_size=100,groups=10):
 		if self.dotenv_file is not None:
 			load_dotenv(self.dotenv_file)
 		else:
 			load_dotenv()
-		headers = {"Ocp-Apim-Subscription-Key" : os.getenv('API_KEY')}
-		params = {"q": keyword, "offset": 0, "count": group_size}
+
+		
+
+		params = {
+			"api_key": os.getenv('API_KEY'),
+			"device": "desktop",
+			"engine": "google",
+			"q": keyword,
+			"location": "Austin, Texas, United States",
+			"google_domain": "google.com",
+			"gl": "us",
+			"hl": "en",
+			"tbm": "isch",
+			"ijn": 0 #nosso offset
+		}
+
+		image_results = []
+		search = GoogleSearch(params)
 		count = 0
+
 		
-		search = requests.get(self.API_URL, headers=headers, params=params)
-		search.raise_for_status()
-		results = search.json()
-		
-		estNumResults = min(results["totalEstimatedMatches"], max_results)
-		
+
+
 		for offset in range(0, estNumResults, group_size):
-			params["offset"] = offset
-			search = requests.get(self.API_URL, headers=headers, params=params)
-			search.raise_for_status()
-			results = search.json()
-		
-			for v in results["value"]:
-				# try to download the image
-				try:
-					# make a request to download the image
-					r = requests.get(v["contentUrl"], timeout=30)
-					# build the path to the output image
-					ext = v["contentUrl"][v["contentUrl"].rfind("."):]
-					p = os.path.join(self.download_folder, f"{keywords.replace(' ','.')}.{str(count).zfill(8)}{ext}")
-					# write the image to disk
-					f = open(p, "wb")
-					f.write(r.content)
-					f.close()
-
-					image = cv2.imread(p)
-					if image is None:
-						os.remove(p)
-						continue
-
-					else:
-						total += 1	
+			try:
+				results = search.get_dict()
 				
-				except Exception as e:
+				if "error" not in results:
+					for image in results["images_results"]:
+						if image["original"] not in image_results:
+							image_results.append(image["original"])
+			
+					# update to the next page
+					params["ijn"] += 1
+				
+				else:
+					images_is_present = False
+					#print(results["error"])
+			
+			except Exception as e:
+				continue
+
+		
+		for v in image_results:
+			# try to download the image
+			try:
+				# make a request to download the image
+				r = requests.get(v, timeout=30)
+				# build the path to the output image
+				ext = v[v.rfind("."):]
+				p = os.path.join(self.download_folder, f"{keywords.replace(' ','.')}.{str(count).zfill(8)}{ext}")
+				# write the image to disk
+				f = open(p, "wb")
+				f.write(r.content)
+				f.close()
+
+				image = cv2.imread(p)
+				if image is None:
+					os.remove(p)
 					continue
+
+				else:
+					count += 1
+
+			except Exception as e:
+				continue
+			
+
 			
 
 
