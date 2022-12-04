@@ -104,24 +104,31 @@ class BaseModel(object):
 	def run_test_harness(self,dataSetFolder,classes, dataAugmentatorTrain,dataAugmentatorValid,epochs=20,verbose=1,save=True):
 		train_dir = os.path.join(dataSetFolder,"train","")
 		val_dir = os.path.join(dataSetFolder,"val","")
+		test_dir = os.path.join(dataSetFolder,"test","")
 
 		train_it = DataFlowClasses(train_dir,classes,[dataAugmentatorTrain.processImage, self.preProcessInput],scale=self.scale,bufferWorkers=16,batch_size=32)
 		val_it = DataFlowClasses(val_dir,classes,[dataAugmentatorValid.processImage, self.preProcessInput],scale=self.scale,bufferWorkers=16,batch_size=32)
+		test_it = DataFlowClasses(test_dir,classes,[dataAugmentatorValid.processImage, self.preProcessInput],scale=self.scale,bufferWorkers=16,batch_size=32)
 		
 		callback = EarlyStopping(monitor='val_loss', patience=3)
 		self.history = self.model.fit(train_it, steps_per_epoch=len(train_it), callbacks=[callback], validation_data=val_it, validation_steps=len(val_it), epochs=epochs, verbose=verbose)
-		evaluation = self.model.evaluate(val_it, steps=len(val_it), verbose=0)
-		
+		self.evaluationValidation = self.model.evaluate(val_it, steps=len(val_it), verbose=0)
+		self.evaluationTest = self.model.evaluate(test_it, steps=len(test_it), verbose=0)
+
+		print(f"model {self.name} Validation Evaluation:")
+		print(self.evaluationValidation)
+		print(f"model {self.name} Test Evaluation:")
+		print(self.evaluationTest)
+
 		if save:
 			self.model.save(self.name + '_Train.h5')
-			print(f"model {self.name} Evaluation:")
-			print(evaluation)
-	
+
 
 	def summarize(self,file_name=None):
 		assert self.history is not None
 		file_name = file_name or self.name
 		
 		with open(f'{file_name}.json', 'w') as outp:
-			json.dump(self.history.history, outp)
+			finalDict = {"evalTest":self.evaluationTest,"evalValid":self.evaluationValidation,"trainHistory":self.history.history}
+			json.dump(finalDict, outp)
 		pass	

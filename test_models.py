@@ -11,13 +11,11 @@ print(tf.config.list_physical_devices('GPU'))
 
 #################################
 ### Meta Work ###
-
+print("Organizing")
 data_cats_dogs = "CatsDogs"
-#final_cats_dogs = "CatsDogsFinal"
-#do = DirectoryOrganizer(data_cats_dogs,["cat","dog"],seed=1, val_ratio=0.25,workers=32)
-#do.make()
-#doFinal = DirectoryOrganizer(final_cats_dogs,["cat","dog"],seed=1, val_ratio=0.0,workers=32)
-#doFinal.make()
+do = DirectoryOrganizer(data_cats_dogs,{"cat":1,"dog":1},sub_dirs={"train":1,"test":0.25,"val":0.15},workers=32)
+do.make()
+
 
 
 #data_cats_dogs_pandas = "CatsDogsPandas"
@@ -39,79 +37,79 @@ print("Training Model")
 DAugmentator = DataAugmentator()
 DAugmentatorVal = DataAugmentator(contProb=0,brigProb=0,vFProb=0,hFProb=0,rotProb=0, trtProb=0)
 
-#CNN = BaseModel("VGG1", basic_VGG,scale=255, blocks=1)
-#try:
-#	CNN.run_test_harness(data_cats_dogs,["cat","dog"],DAugmentatorVal,DAugmentatorVal)
-#except Exception as e:
-#	print(e)
-#
-#try:
-#	CNN.summarize()
-#except Exception as e:
-#	print(e)
+CNN = BaseModel("VGG1", basic_VGG,scale=255, blocks=1)
+try:
+	CNN.run_test_harness(data_cats_dogs,["cat","dog"],DAugmentatorVal,DAugmentatorVal)
+except Exception as e:
+	print(e)
+
+try:
+	CNN.summarize()
+except Exception as e:
+	print(e)
 
 
-#CNN = BaseModel("VGG1DA", basic_VGG,scale=255, blocks=1)
-#try:
-#	CNN.run_test_harness(data_cats_dogs,["cat","dog"],DAugmentator,DAugmentatorVal)
-#except Exception as e:
-#	print(e)
-#
-#try:
-#	CNN.summarize()
-#except Exception as e:
-#	print(e)
+CNN = BaseModel("VGG1DA", basic_VGG,scale=255, blocks=1)
+try:
+	CNN.run_test_harness(data_cats_dogs,["cat","dog"],DAugmentator,DAugmentatorVal)
+except Exception as e:
+	print(e)
 
-
-
-#CNN = BaseModel("VGG2", basic_VGG,scale=255, blocks=2)
-#try:
-#	CNN.run_test_harness(data_cats_dogs,["cat","dog"],DAugmentatorVal,DAugmentatorVal)
-#except Exception as e:
-#	print(e)
-#
-#try:
-#	CNN.summarize()
-#except Exception as e:
-#	print(e)
+try:
+	CNN.summarize()
+except Exception as e:
+	print(e)
 
 
 
-#CNN = BaseModel("VGG2DA", basic_VGG, scale=255, blocks=2)
-#try:
-#	CNN.run_test_harness(data_cats_dogs,["cat","dog"],DAugmentator,DAugmentatorVal)
-#except Exception as e:
-#	print(e)
-#
-#try:
-#	CNN.summarize()
-#except Exception as e:
-#	print(e)
+CNN = BaseModel("VGG2", basic_VGG,scale=255, blocks=2)
+try:
+	CNN.run_test_harness(data_cats_dogs,["cat","dog"],DAugmentatorVal,DAugmentatorVal)
+except Exception as e:
+	print(e)
+
+try:
+	CNN.summarize()
+except Exception as e:
+	print(e)
 
 
 
-#CNN = BaseModel("VGG3", basic_VGG, scale=255, blocks=3)
-#try:
-#	CNN.run_test_harness(data_cats_dogs,["cat","dog"],DAugmentatorVal,DAugmentatorVal)
-#except Exception as e:
-#	print(e)
-#
-#try:
-#	CNN.summarize()
-#except Exception as e:
-#	print(e)
+CNN = BaseModel("VGG2DA", basic_VGG, scale=255, blocks=2)
+try:
+	CNN.run_test_harness(data_cats_dogs,["cat","dog"],DAugmentator,DAugmentatorVal)
+except Exception as e:
+	print(e)
+
+try:
+	CNN.summarize()
+except Exception as e:
+	print(e)
 
 
-#CNN = BaseModel("VGG3DA", basic_VGG, scale=255, blocks=3)
-#try:
-#	CNN.run_test_harness(data_cats_dogs,["cat","dog"],DAugmentator,DAugmentatorVal)
-#except waitTimeException as e:
-#	print(e)
-#
-#try:
-#	CNN.summarize()
-#except Exception as e:
-#	print(e)
+
+CNN = BaseModel("VGG3", basic_VGG, scale=255, blocks=3)
+try:
+	CNN.run_test_harness(data_cats_dogs,["cat","dog"],DAugmentatorVal,DAugmentatorVal)
+except Exception as e:
+	print(e)
+
+try:
+	CNN.summarize()
+except Exception as e:
+	print(e)
+
+
+CNN = BaseModel("VGG3DA", basic_VGG, scale=255, blocks=3)
+try:
+	CNN.run_test_harness(data_cats_dogs,["cat","dog"],DAugmentator,DAugmentatorVal)
+except waitTimeException as e:
+	print(e)
+
+try:
+	CNN.summarize()
+except Exception as e:
+	print(e)
 
 
 

@@ -1,6 +1,5 @@
 import os
 from shutil import copyfile
-from random import seed
 from random import random
 import threading
 import math
@@ -10,7 +9,7 @@ from dotenv import load_dotenv
 
 
 class DirectoryOrganizer(object):
-	def __init__(self, new_folder,labels,train_folders=["train"],dataset_folder="",seed=None, val_ratio=0.25, workers=16):
+	def __init__(self, new_folder,labels,train_folders=["train"],sub_dirs={"train":1,"val":0.1,"test":0.1},dataset_folder="", workers=16):
 		self.new_folder = new_folder
 		self.dataset_folder = dataset_folder
 		
@@ -20,12 +19,10 @@ class DirectoryOrganizer(object):
 			self.train_folders = [os.path.join(train_folder,"") for train_folder in train_folders]
 		
 		self.labels = labels
-		self.sub_dirs = ["train","val"]
+		self.sub_dirs = list(sub_dirs.keys())
+		self.ratios = [(x,sum(list(sub_dirs.values())[i:])) for i,x in enumerate(sub_dirs.keys())]
 		self.folders = {}
-		
-		self.seed=seed
-		
-		self.val_ratio=val_ratio
+
 		self.workers = workers
 		pass
 
@@ -42,8 +39,6 @@ class DirectoryOrganizer(object):
 	def make(self):
 		self.make_structure()
 		folders = self.train_folders
-		if self.seed is not None:
-			seed(self.seed)
 		
 		for folder in folders:
 			foldDir = os.listdir(folder)
@@ -55,14 +50,20 @@ class DirectoryOrganizer(object):
 					src = os.path.join(folder,file)
 					
 					dst_dir = 'train'
-					if random() < self.val_ratio:
-						dst_dir = 'val'
-					
+					pickedValue = random()
+					for sub_dir,odd in self.ratios:
+						if pickedValue < odd:
+							dst_dir = sub_dir
+
+						else:
+							break
+						
 					for label in self.labels:
 						if file.startswith(label):
-							dest = os.path.join(self.folders[label][dst_dir],file)
-							copyfile(src, dest)
-							break
+							if random() < self.labels[label]:
+								dest = os.path.join(self.folders[label][dst_dir],file)
+								copyfile(src, dest)
+								break
 				pass
 
 			threads = [threading.Thread(target=copyAux,args=(i,)) for i in range(self.workers)]
