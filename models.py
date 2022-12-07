@@ -101,10 +101,14 @@ class BaseModel(object):
 	def reset_model(self):
 		self.model = modelFunction(**(self.model_opts))
 
-	def run_test_harness(self,dataSetFolder,classes, dataAugmentatorTrain,dataAugmentatorValid,epochs=20,verbose=1,save=True):
+	def run_test_harness(self,dataSetFolder,classes, dataAugmentatorTrain,dataAugmentatorValid,epochs=20,verbose=1,save=True,testSetFolder=None):
 		train_dir = os.path.join(dataSetFolder,"train","")
 		val_dir = os.path.join(dataSetFolder,"val","")
-		test_dir = os.path.join(dataSetFolder,"test","")
+		
+		if testSetFolder is None:
+			test_dir = os.path.join(dataSetFolder,"test","")
+		else:
+			test_dir = testSetFolder
 
 		train_it = DataFlowClasses(train_dir,classes,[dataAugmentatorTrain.processImage, self.preProcessInput],scale=self.scale,bufferWorkers=16,batch_size=32)
 		val_it = DataFlowClasses(val_dir,classes,[dataAugmentatorValid.processImage, self.preProcessInput],scale=self.scale,bufferWorkers=16,batch_size=32)
