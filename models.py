@@ -26,7 +26,8 @@ import json
 
 
 metricsBinary = [tf.keras.metrics.Accuracy(), tf.keras.metrics.AUC()] #Precision e Recall não funcionam aqui.
-metricsNonBinary = lambda x: [tf.keras.metrics.CategoricalAccuracy(),tf.keras.metrics.AUC(multi_label=True,num_labels=x),tf.keras.metrics.Precision(),tf.keras.metrics.Recall()]
+metricsNonBinary = lambda x: [tf.keras.metrics.CategoricalAccuracy(),tf.keras.metrics.AUC(multi_label=True,num_labels=x),tf.keras.metrics.TruePositives(),tf.keras.metrics.FalsePositives(),
+tf.keras.metrics.FalseNegatives()]
 
 
 
