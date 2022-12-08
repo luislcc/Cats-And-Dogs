@@ -9,5 +9,6 @@ CatsDogsPandas/
 CatsDogsPandasFinal/
 CatsDogsPandasUnbalanced/
 .env
+*.zip
 *.png
 *.h5

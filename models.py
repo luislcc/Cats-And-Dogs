@@ -25,6 +25,10 @@ import os
 import json
 
 
+metricsBinary = [tf.keras.metrics.Accuracy(), tf.keras.metrics.AUC()] #Precision e Recall não funcionam aqui.
+metricsNonBinary = lambda x: [tf.keras.metrics.CategoricalAccuracy(),tf.keras.metrics.AUC(multi_label=True,num_labels=x),tf.keras.metrics.Precision(),tf.keras.metrics.Recall()]
+
+
 
 def basic_VGG(blocks=1, classes=2, hiddenDefs=[(128,"relu")], input_shape=(200, 200, 3)):
 	model = Sequential()
@@ -34,17 +38,24 @@ def basic_VGG(blocks=1, classes=2, hiddenDefs=[(128,"relu")], input_shape=(200, 
 
 	for block in range(1,blocks-1):
 		model.add(Conv2D(64*block, (3, 3), activation='relu', kernel_initializer='he_uniform', padding='same'))
-		model.add(MaxPooling2D((2, 2)))	
+		model.add(MaxPooling2D((2, 2)))
 
 	model.add(Flatten())
 	
 	for neuronNr,actv in hiddenDefs:
 		model.add(Dense(neuronNr, activation=actv, kernel_initializer='he_uniform'))
 	
-	model.add(Dense(classes, activation='softmax'))
-	# compile model
 	opt = SGD(learning_rate=0.001, momentum=0.9)
-	model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy',tf.keras.metrics.Precision(),tf.keras.metrics.Recall()])
+
+	if classes > 2:
+		model.add(Dense(classes, activation='softmax'))
+		# compile model
+		model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=metricsNonBinary(classes))
+	
+	else:
+		model.add(Dense(1, activation='sigmoid'))
+		# compile model
+		model.compile(optimizer=opt, loss='binary_crossentropy', metrics=metricsBinary)
 	return model
 
 
@@ -64,12 +75,21 @@ def tutorial_transfer(arch):
 		for neuronNr,actv in hiddenDefs:
 			auxHdn = Dense(neuronNr, activation=actv, kernel_initializer='he_uniform')(auxHdn)
 		
-		output = Dense(classes, activation='softmax')(auxHdn)
+		if classes > 2:
+			output = Dense(classes, activation='softmax')(auxHdn)
+		
+		else:
+			output = Dense(1, activation='sigmoid')(auxHdn)
+		
 		# define new model
 		model = Model(inputs=model.inputs, outputs=output)
 		# compile model
 		optimizer = SGD(learning_rate=0.001, momentum=0.9)
-		model.compile(optimizer=optimizer, loss='categorical_crossentropy', metrics=['accuracy',tf.keras.metrics.Precision(),tf.keras.metrics.Recall()])
+		
+		if classes > 2:
+			model.compile(optimizer=optimizer, loss='categorical_crossentropy', metrics=metricsNonBinary(classes))
+		else:
+			model.compile(optimizer=optimizer, loss='binary_crossentropy', metrics=metricsBinary)
 		return model
 
 	return __define_model
@@ -123,7 +143,6 @@ class BaseModel(object):
 		print(self.evaluationValidation)
 		print(f"model {self.name} Test Evaluation:")
 		print(self.evaluationTest)
-
 		if save:
 			self.model.save(self.name + '_Train.h5')
 
@@ -135,4 +154,4 @@ class BaseModel(object):
 		with open(f'{file_name}.json', 'w') as outp:
 			finalDict = {"evalTest":self.evaluationTest,"evalValid":self.evaluationValidation,"trainHistory":self.history.history}
 			json.dump(finalDict, outp)
-		pass	
+		pass
