@@ -151,7 +151,7 @@ class BaseModel(object):
 		assert self.history is not None
 		file_name = file_name or self.name
 		
-		with open(f'{file_name}.json', 'w') as outp:
+		with open(f'json\\{file_name}.json', 'w') as outp:
 			finalDict = {"evalTest":self.evaluationTest,"evalValid":self.evaluationValidation,"trainHistory":self.history.history}
 			json.dump(finalDict, outp)
 		pass
